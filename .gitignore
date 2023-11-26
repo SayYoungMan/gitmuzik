@@ -1,2 +1,5 @@
+# Python related stuff
+**/__pycache__/*
+
 # Secrets stored
 .env
