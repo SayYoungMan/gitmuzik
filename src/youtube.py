@@ -28,6 +28,17 @@ def _fetch_playlist_items(client, next_page_token):
 def _is_private_video(playlist_item):
     return playlist_item["snippet"]["title"] == "Private video"
 
+def _extract_useful_info(playlist_item):
+    # Snippet is a part of playlistItem that has all relevant information
+    snippet = playlist_item["snippet"]
+
+    return {
+        "title": snippet["title"],
+        "position": snippet["position"],
+        "owner": snippet["videoOwnerChannelTitle"].removesuffix(" - Topic").strip(),
+        "image_url": snippet["thumbnails"]["high"]["url"],
+    }
+
 def fetch_all_playlist_items(client) -> list[MusicMetaData]:
     all_items = []
     next_page_token = None
@@ -43,7 +54,7 @@ def fetch_all_playlist_items(client) -> list[MusicMetaData]:
         else:
             break
 
-    all_musics = [MusicMetaData(item) for item in all_items if not _is_private_video(item)]
+    all_musics = [MusicMetaData(_extract_useful_info(item)) for item in all_items if not _is_private_video(item)]
     logging.info("Successfully fetched items from the playlist.")
 
     return all_musics

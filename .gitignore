@@ -3,3 +3,6 @@
 
 # Secrets stored
 .env
+
+# Mac related
+**/.DS_STORE
